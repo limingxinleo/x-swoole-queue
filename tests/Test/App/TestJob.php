@@ -1,6 +1,6 @@
 <?php
 // +----------------------------------------------------------------------
-// | TestQueue.php [ WE CAN DO IT JUST THINK IT ]
+// | TestJob.php [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
 // | Copyright (c) 2016-2017 limingxinleo All rights reserved.
 // +----------------------------------------------------------------------
@@ -9,21 +9,21 @@
 namespace Tests\Test\App;
 
 use Xin\Support\File;
-use Xin\Swoole\Queue\Task;
+use Xin\Swoole\Queue\JobInterface;
 
-class TestQueue extends Task
+class TestJob implements JobInterface
 {
-    // 消息队列Redis键值 list lpush添加队列
-    protected $queueKey = 'test:queue:queue';
-    // 延时消息队列的Redis键值 zset
-    protected $delayKey = 'test:queue:delay';
-    // pid地址
-    protected $pidPath = TESTS_PATH . '/queue.pid';
+    public $data;
 
     public $file = TESTS_PATH . '/test.cache';
 
-    protected function handle($recv)
+    public function __construct($data)
     {
-        File::getInstance()->put($this->file, 'upgrade');
+        $this->data = $data;
+    }
+
+    public function handle()
+    {
+        File::getInstance()->put($this->file, $this->data);
     }
 }

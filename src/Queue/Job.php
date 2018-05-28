@@ -23,8 +23,6 @@ class Job extends Task
     protected $queueKey = 'swoole:queue:queue';
     // 延时消息队列的Redis键值 zset
     protected $delayKey = 'swoole:queue:delay';
-    // pid地址
-    protected $pidPath = TESTS_PATH . '/queue.pid';
     // 日志Handler
     protected $loggerHandler;
 
