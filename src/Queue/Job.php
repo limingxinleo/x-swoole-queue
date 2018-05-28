@@ -10,6 +10,7 @@ namespace Xin\Swoole\Queue;
 
 use Psr\Log\LoggerInterface;
 use Xin\Cli\Color;
+use Exception;
 
 class Job extends Task
 {
@@ -87,12 +88,10 @@ class Job extends Task
      */
     protected function logError(Exception $ex)
     {
-        /** @var Factory $factory */
-        $factory = di('logger');
-        $logger = $factory->getLogger('queue-failed');
-
-        $msg = $ex->getMessage() . ' code:' . $ex->getCode() . ' in ' . $ex->getFile() . ' line ' . $ex->getLine() . PHP_EOL . $ex->getTraceAsString();
-        return $logger->error($msg);
+        if ($this->loggerHandler instanceof LoggerInterface) {
+            $msg = $ex->getMessage() . ' code:' . $ex->getCode() . ' in ' . $ex->getFile() . ' line ' . $ex->getLine() . PHP_EOL . $ex->getTraceAsString();
+            $this->loggerHandler->error($msg);
+        }
     }
 
     /**
