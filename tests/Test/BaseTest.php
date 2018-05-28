@@ -10,6 +10,7 @@ namespace Tests\Test;
 
 use Tests\Rpc\App\Test2Client;
 use Tests\Rpc\App\TestClient;
+use Tests\Test\App\ExceptionJob;
 use Tests\Test\App\TestJob;
 use Tests\TestCase;
 use swoole_process;
@@ -41,5 +42,15 @@ class BaseTest extends TestCase
         sleep(2);
         $data = file_get_contents($this->file);
         $this->assertEquals('upgrade by test job!', $data);
+    }
+
+    public function testExceptionJob()
+    {
+        $job = new ExceptionJob('hi, exception');
+        $this->redis->del('swoole:queue:error');
+        $this->redis->lPush('swoole:queue:queue', serialize($job));
+
+        sleep(2);
+        $this->assertTrue($this->redis->lLen('swoole:queue:error') === 1);
     }
 }
