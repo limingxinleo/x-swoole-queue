@@ -8,18 +8,10 @@
 // +----------------------------------------------------------------------
 require __DIR__ . '/bootstrap.php';
 
-use Xin\Swoole\Rpc\Server;
-use Tests\Rpc\App\Test2Handler;
-use Tests\Rpc\App\LoggerHandler;
+use Tests\Test\App\TestQueue;
 
-$server = new Server();
-$server->setHandler('test2', Test2Handler::class)
-    ->setLoggerHandler(LoggerHandler::getInstance())
-    ->serve('0.0.0.0', '11521', [
-        'pid_file' => './socket2.pid',
-        'daemonize' => false,
-        'max_request' => 500, // 每个worker进程最大处理请求次数
-        'worker_num' => 5,
-        'open_eof_check' => true,
-        'package_eof' => "\r\n",
-    ]);
+$config = include TESTS_PATH . '/_ci/config.php';
+
+$queue = new TestQueue();
+$queue->setRedisConfig($config['redisHost'], $config['redisAuth'], $config['redisDb'], $config['redisPort']);
+$queue->run();
