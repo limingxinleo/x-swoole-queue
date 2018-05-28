@@ -18,7 +18,7 @@ use Xin\Support\File;
 abstract class Task
 {
     // 最大进程数
-    protected $maxProcesses = 500;
+    protected $maxProcesses = 10;
     // 当前进程数
     protected $process = 0;
     // 消息队列Redis键值 list lpush添加队列
@@ -32,7 +32,7 @@ abstract class Task
     // 主进程PID
     protected $pid;
     // 子进程最大循环处理次数
-    protected $processHandleMaxNumber = null;
+    protected $processHandleMaxNumber = 10000;
     // Redis Host
     protected $redisHost = '127.0.0.1';
     // Redis Auth
@@ -104,6 +104,8 @@ abstract class Task
         $this->redisAuth = $auth;
         $this->redisDb = $db;
         $this->redisPort = $port;
+
+        return $this;
     }
 
     /**
