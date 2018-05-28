@@ -43,6 +43,7 @@ before_script:
   # 启动PHP
   - cd $TRAVIS_BUILD_DIR
   - php tests/queue.php &> /dev/null &
+  - php tests/queue2.php &> /dev/null &
 
 script:
   - cd $TRAVIS_BUILD_DIR
