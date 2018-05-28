@@ -12,3 +12,4 @@
 #  to license@phalconphp.com so we can send you a copy immediately.
 
 printf "\n" | pecl install --force swoole &> /dev/null
+echo 'extension="redis.so"' >> "$(phpenv root)/versions/$(phpenv version-name)/etc/php.ini"

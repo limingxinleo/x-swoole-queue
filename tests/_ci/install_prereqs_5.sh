@@ -12,3 +12,4 @@
 #  to license@phalconphp.com so we can send you a copy immediately.
 
 printf "\n" | pecl install --force swoole-1.10.1 &> /dev/null
+printf "\n" | pecl install --force redis &> /dev/null
