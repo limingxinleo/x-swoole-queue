@@ -132,7 +132,7 @@ abstract class Task
      * @author limx
      * @param swoole_process $worker
      */
-    protected function task(swoole_process $worker)
+    public function task(swoole_process $worker)
     {
         $redis = $this->redisChildClient();
         $number = 0;

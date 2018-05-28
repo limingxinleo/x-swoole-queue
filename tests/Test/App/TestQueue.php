@@ -8,6 +8,7 @@
 // +----------------------------------------------------------------------
 namespace Tests\Test\App;
 
+use Xin\Support\File;
 use Xin\Swoole\Queue\Task;
 
 class TestQueue extends Task
@@ -19,8 +20,10 @@ class TestQueue extends Task
     // pid地址
     protected $pidPath = TESTS_PATH . '/queue.pid';
 
+    public $file = TESTS_PATH . '/test.cache';
+
     protected function handle($recv)
     {
-        echo $recv;
+        File::getInstance()->put($this->file, 'upgrade');
     }
 }
