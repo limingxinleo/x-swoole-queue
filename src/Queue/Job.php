@@ -54,6 +54,7 @@ class Job extends Task
     public function setLoggerHandler(LoggerInterface $logger)
     {
         $this->loggerHandler = $logger;
+        return $this;
     }
 
     protected function handle($recv)
