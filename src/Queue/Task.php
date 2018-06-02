@@ -150,7 +150,7 @@ abstract class Task
             // 无任务时,阻塞等待
             $list = $redis->brpop($this->queueKey, 3);
             if (!$list) {
-                continue;
+                break;
             }
 
             list($key, $data) = $list;
