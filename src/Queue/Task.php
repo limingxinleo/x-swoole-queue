@@ -6,7 +6,6 @@
 // +----------------------------------------------------------------------
 // | Author: limx <715557344@qq.com> <https://github.com/limingxinleo>
 // +----------------------------------------------------------------------
-declare(ticks=1);
 
 namespace Xin\Swoole\Queue;
 
@@ -48,6 +47,12 @@ abstract class Task
      */
     public function run()
     {
+        if (version_compare(PHP_VERSION, '7.1', ">=")) {
+            pcntl_async_signals(true);
+        } else {
+            declare(ticks=1);
+        }
+
         // 验证必要参数
         $this->verify();
 
@@ -63,7 +68,7 @@ abstract class Task
         while (true) {
             // 等待
             sleep($this->waitTime);
-
+            
             // 监听延时队列
             if (!empty($this->delayKey) && $delay_data = $redis->zrangebyscore($this->delayKey, 0, time())) {
                 foreach ($delay_data as $data) {

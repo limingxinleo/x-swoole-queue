@@ -11,6 +11,7 @@ namespace Tests\Test;
 use Tests\Rpc\App\Test2Client;
 use Tests\Rpc\App\TestClient;
 use Tests\Test\App\ExceptionJob;
+use Tests\Test\App\ManyJob;
 use Tests\Test\App\TestJob;
 use Tests\TestCase;
 use swoole_process;
@@ -52,5 +53,18 @@ class BaseTest extends TestCase
 
         sleep(2);
         $this->assertTrue($this->redis->lLen('swoole:queue:error') === 1);
+    }
+
+    public function testManyJob()
+    {
+        $this->redis->del('test:incr');
+
+        for ($i = 0; $i < 1000; $i++) {
+            $job = new ManyJob();
+            $this->redis->lPush('swoole:queue:queue', serialize($job));
+        }
+
+        sleep(2);
+        $this->assertEquals(1000, $this->redis->get('test:incr'));
     }
 }
