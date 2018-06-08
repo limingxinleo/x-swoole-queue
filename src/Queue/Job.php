@@ -15,7 +15,7 @@ use Exception;
 class Job extends Task
 {
     // 最大进程数
-    protected $maxProcesses = 2;
+    protected $maxProcesses = 3;
     // 子进程最大循环处理次数
     protected $processHandleMaxNumber = 10000;
     // 失败的消息

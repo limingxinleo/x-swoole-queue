@@ -59,12 +59,12 @@ class BaseTest extends TestCase
     {
         $this->redis->del('test:incr');
 
-        for ($i = 0; $i < 1000; $i++) {
+        for ($i = 0; $i < 10000; $i++) {
             $job = new ManyJob();
             $this->redis->lPush('swoole:queue:queue', serialize($job));
         }
 
-        sleep(2);
-        $this->assertEquals(1000, $this->redis->get('test:incr'));
+        sleep(6);
+        $this->assertEquals(10000, $this->redis->get('test:incr'));
     }
 }
