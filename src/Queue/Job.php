@@ -11,6 +11,7 @@ namespace Xin\Swoole\Queue;
 use Psr\Log\LoggerInterface;
 use Xin\Cli\Color;
 use Exception;
+use Redis;
 
 class Job extends Task
 {
@@ -26,6 +27,8 @@ class Job extends Task
     protected $delayKey = 'swoole:queue:delay';
     // 日志Handler
     protected $loggerHandler;
+    // 当前redis 实例
+    protected $redis;
 
     public function setQueueKey($key)
     {
@@ -76,7 +79,7 @@ class Job extends Task
             $this->logError($ex);
 
             // 推送失败的消息对失败队列
-            $redis = $this->redisChildClient('job');
+            $redis = $this->getRedisChildClient();
             $redis->lpush($this->errorKey, $recv);
         }
     }
@@ -101,7 +104,7 @@ class Job extends Task
      */
     public function reloadErrorJobs()
     {
-        $redis = $this->redisChildClient('job');
+        $redis = $this->getRedisChildClient();
         while ($data = $redis->rpop($this->errorKey)) {
             $redis->lpush($this->queueKey, $data);
         }
@@ -114,8 +117,33 @@ class Job extends Task
      */
     public function flushErrorJobs()
     {
-        $redis = $this->redisChildClient('job');
+        $redis = $this->getRedisChildClient();
         $redis->del($this->errorKey);
         echo Color::success("失败的脚本已被清除！");
+    }
+
+    public function getRedisChildClient()
+    {
+        if (isset($this->redis) && $this->redis instanceof Redis) {
+            return $this->redis;
+        }
+
+        return $this->redis = $this->redisChildClient('job');
+    }
+
+    public function push(JobInterface $job)
+    {
+        $redis = $this->getRedisChildClient();
+        return $redis->lpush($this->queueKey, serialize($job));
+    }
+
+    public function delay(JobInterface $job, $time = 0)
+    {
+        if (empty($time)) {
+            return $this->push($job);
+        }
+
+        $redis = $this->getRedisChildClient();
+        return $redis->lpush($this->queueKey, serialize($job));
     }
 }

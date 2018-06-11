@@ -1,22 +1,27 @@
 <?php
 // +----------------------------------------------------------------------
-// | server.php [ WE CAN DO IT JUST THINK IT ]
+// | Queue.php [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
 // | Copyright (c) 2016-2017 limingxinleo All rights reserved.
 // +----------------------------------------------------------------------
 // | Author: limx <715557344@qq.com> <https://github.com/limingxinleo>
 // +----------------------------------------------------------------------
-require __DIR__ . '/bootstrap.php';
+namespace Tests\Test\App;
 
 use Xin\Swoole\Queue\Job;
-use Tests\Test\App\Queue;
 
-$config = include TESTS_PATH . '/_ci/config.php';
+class Queue extends Job
+{
+    public function __construct()
+    {
+        $config = include TESTS_PATH . '/_ci/config.php';
 
-$host = $config['redisHost'];
-$auth = $config['redisAuth'];
-$db = $config['redisDb'];
-$port = $config['redisPort'];
+        $host = $config['redisHost'];
+        $auth = $config['redisAuth'];
+        $db = $config['redisDb'];
+        $port = $config['redisPort'];
 
-$queue = new Queue();
-$queue->run();
+        $this->setRedisConfig($host, $auth, $db, $port);
+        $this->setPidPath(TESTS_PATH . '/queue2.pid');
+    }
+}
