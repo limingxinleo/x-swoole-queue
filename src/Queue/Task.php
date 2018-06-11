@@ -185,7 +185,6 @@ abstract class Task
     /**
      * @desc   返回redis实例
      * @author limx
-     * @return mixed
      */
     protected function redisClient()
     {
@@ -201,7 +200,6 @@ abstract class Task
     /**
      * @desc   子进程redis实例
      * @author limx
-     * @return mixed
      */
     protected function redisChildClient($uniqid = null)
     {
