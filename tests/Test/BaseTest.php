@@ -78,4 +78,19 @@ class BaseTest extends TestCase
         $data = file_get_contents($this->file);
         $this->assertEquals('upgrade by test job, when the queue push it!', $data);
     }
+
+    public function testDelayJob()
+    {
+        $data = file_get_contents($this->file);
+        $this->assertEquals('init', $data);
+        $job = new TestJob('upgrade by test job, when the queue delay it!');
+        $queue = new Queue();
+        $queue->delay($job, 2);
+        sleep(1);
+        $data = file_get_contents($this->file);
+        $this->assertEquals('init', $data);
+        sleep(2);
+        $data = file_get_contents($this->file);
+        $this->assertEquals('upgrade by test job, when the queue delay it!', $data);
+    }
 }
