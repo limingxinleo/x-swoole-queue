@@ -68,7 +68,7 @@ abstract class Task
         while (true) {
             // 等待
             sleep($this->waitTime);
-            
+
             // 监听延时队列
             if (!empty($this->delayKey) && $delay_data = $redis->zrangebyscore($this->delayKey, 0, time())) {
                 foreach ($delay_data as $data) {
@@ -203,14 +203,18 @@ abstract class Task
      * @author limx
      * @return mixed
      */
-    protected function redisChildClient()
+    protected function redisChildClient($uniqid = null)
     {
+        if (empty($uniqid)) {
+            $uniqid = uniqid();
+        }
+
         return Redis::getInstance(
             $this->redisHost,
             $this->redisAuth,
             $this->redisDb,
             $this->redisPort,
-            'child_' . uniqid()
+            'child_' . $uniqid
         );
     }
 
