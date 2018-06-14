@@ -42,6 +42,7 @@ install:
 before_script:
   # 启动PHP
   - cd $TRAVIS_BUILD_DIR
+  - cp -f tests/_ci/config.example.php test/_ci/config.php
   - php tests/queue.php &> /dev/null &
   - php tests/queue2.php &> /dev/null &
 
