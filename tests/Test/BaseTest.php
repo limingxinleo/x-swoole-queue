@@ -9,8 +9,6 @@
 namespace Tests\Test;
 
 use Tests\Test\App\Queue;
-use Tests\Rpc\App\Test2Client;
-use Tests\Rpc\App\TestClient;
 use Tests\Test\App\ExceptionJob;
 use Tests\Test\App\ManyJob;
 use Tests\Test\App\TestJob;
