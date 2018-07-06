@@ -12,6 +12,8 @@ use Xin\Swoole\Queue\Job;
 
 class Queue extends Job
 {
+    protected $maxProcesses = 10;
+
     public function __construct()
     {
         $config = include TESTS_PATH . '/_ci/config.php';

@@ -113,6 +113,7 @@ class BaseTest extends TestCase
         $job = new ExceptionJob('hi, exception');
         $queue = new Queue();
 
+        sleep(2);
         $this->redis->del('swoole:queue:error');
         $queue->push($job);
 
