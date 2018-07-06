@@ -21,6 +21,7 @@ class ExceptionJob implements JobInterface
 
     public function handle()
     {
+        sleep(1);
         throw new \Exception($this->data);
     }
 }

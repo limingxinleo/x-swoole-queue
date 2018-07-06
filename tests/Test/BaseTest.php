@@ -91,4 +91,35 @@ class BaseTest extends TestCase
         $data = file_get_contents($this->file);
         $this->assertEquals('upgrade by test job, when the queue delay it!', $data);
     }
+
+    public function testReloadFailedJob()
+    {
+        $job = new ExceptionJob('hi, exception');
+        $queue = new Queue();
+
+        $this->redis->del('swoole:queue:error');
+        $queue->push($job);
+
+        sleep(2);
+        $this->assertTrue($this->redis->lLen('swoole:queue:error') === 1);
+        $count = $queue->reloadErrorJobs();
+        $this->assertEquals(1, $count);
+        $this->assertTrue($this->redis->lLen('swoole:queue:error') === 0);
+    }
+
+
+    public function testFlushFailedJob()
+    {
+        $job = new ExceptionJob('hi, exception');
+        $queue = new Queue();
+
+        $this->redis->del('swoole:queue:error');
+        $queue->push($job);
+
+        sleep(2);
+        $this->assertTrue($this->redis->lLen('swoole:queue:error') === 1);
+        $count = $queue->flushErrorJobs();
+        $this->assertEquals(1, $count);
+        $this->assertTrue($this->redis->lLen('swoole:queue:error') === 0);
+    }
 }
