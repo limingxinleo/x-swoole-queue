@@ -99,7 +99,7 @@ class Job extends Task
     }
 
     /**
-     * @desc   重载失败的Job
+     * 重载失败的Job
      * @author limx
      */
     public function reloadErrorJobs()
@@ -114,13 +114,23 @@ class Job extends Task
     }
 
     /**
-     * @desc   删除所有失败的Job
+     * 删除所有失败的Job
      * @author limx
      */
     public function flushErrorJobs()
     {
         $redis = $this->getRedisChildClient();
         return $redis->del($this->errorKey);
+    }
+
+    /**
+     * 查询失败的消息数
+     * @author limx
+     */
+    public function countErrorJobs()
+    {
+        $redis = $this->getRedisChildClient();
+        return $redis->lLen($this->errorKey);
     }
 
     public function getRedisChildClient()

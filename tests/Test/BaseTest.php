@@ -119,6 +119,7 @@ class BaseTest extends TestCase
 
         sleep(2);
         $this->assertTrue($this->redis->lLen('swoole:queue:error') === 1);
+        $this->assertTrue($queue->countErrorJobs() === 1);
         $count = $queue->flushErrorJobs();
         $this->assertEquals(1, $count);
         $this->assertTrue($this->redis->lLen('swoole:queue:error') === 0);
