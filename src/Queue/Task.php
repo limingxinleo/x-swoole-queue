@@ -1,15 +1,14 @@
 <?php
-// +----------------------------------------------------------------------
-// | Queue.php [ WE CAN DO IT JUST THINK IT ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2016-2017 limingxinleo All rights reserved.
-// +----------------------------------------------------------------------
-// | Author: limx <715557344@qq.com> <https://github.com/limingxinleo>
-// +----------------------------------------------------------------------
+/**
+ * This file is part of Queue Component with Swoole.
+ *
+ * @link     https://github.com/limingxinleo/x-swoole-queue
+ * @contact  limingxin@swoft.org
+ * @license  https://github.com/limingxinleo/x-swoole-queue/blob/master/LICENSE
+ */
 
 namespace Xin\Swoole\Queue;
 
-use Xin\Cli\Color;
 use swoole_process;
 use Xin\Redis;
 use Xin\Support\File;
@@ -18,26 +17,37 @@ abstract class Task
 {
     // 最大进程数
     protected $maxProcesses = 10;
+
     // 当前进程数
     protected $process = 0;
+
     // 消息队列Redis键值 list lpush添加队列
     protected $queueKey = '';
+
     // 延时消息队列的Redis键值 zset
     protected $delayKey = '';
+
     // 子进程数到达最大值时的等待时间
     protected $waitTime = 1;
+
     // pid地址
     protected $pidPath;
+
     // 主进程PID
     protected $pid;
+
     // 子进程最大循环处理次数
     protected $processHandleMaxNumber = 10000;
+
     // Redis Host
     protected $redisHost = '127.0.0.1';
+
     // Redis Auth
     protected $redisAuth = null;
+
     // Redis DB
     protected $redisDb = 0;
+
     // Redis Port
     protected $redisPort = 6379;
 
@@ -47,7 +57,7 @@ abstract class Task
      */
     public function run()
     {
-        if (version_compare(PHP_VERSION, '7.1', ">=")) {
+        if (version_compare(PHP_VERSION, '7.1', '>=')) {
             pcntl_async_signals(true);
         } else {
             declare(ticks=1);
@@ -61,7 +71,7 @@ abstract class Task
         File::getInstance()->put($this->pidPath, $this->pid);
 
         // install signal handler for dead kids
-        pcntl_signal(SIGCHLD, [$this, "signalHandler"]);
+        pcntl_signal(SIGCHLD, [$this, 'signalHandler']);
         set_time_limit(0);
         // 实例化Redis实例
         $redis = $this->redisClient();

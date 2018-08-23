@@ -1,11 +1,12 @@
 <?php
-// +----------------------------------------------------------------------
-// | Queue.php [ WE CAN DO IT JUST THINK IT ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2016-2017 limingxinleo All rights reserved.
-// +----------------------------------------------------------------------
-// | Author: limx <715557344@qq.com> <https://github.com/limingxinleo>
-// +----------------------------------------------------------------------
+/**
+ * This file is part of Queue Component with Swoole.
+ *
+ * @link     https://github.com/limingxinleo/x-swoole-queue
+ * @contact  limingxin@swoft.org
+ * @license  https://github.com/limingxinleo/x-swoole-queue/blob/master/LICENSE
+ */
+
 namespace Xin\Swoole\Queue;
 
 use Psr\Log\LoggerInterface;
@@ -19,18 +20,25 @@ class Job extends Task
 {
     // 最大进程数
     protected $maxProcesses = 3;
+
     // 子进程最大循环处理次数
     protected $processHandleMaxNumber = 10000;
+
     // 失败的消息
     protected $errorKey = 'swoole:queue:error';
+
     // 消息队列Redis键值 list lpush添加队列
     protected $queueKey = 'swoole:queue:queue';
+
     // 延时消息队列的Redis键值 zset
     protected $delayKey = 'swoole:queue:delay';
+
     // 日志Handler
     protected $loggerHandler;
+
     // 当前redis 实例
     protected $redis;
+
     // 打包器
     protected $packer;
 

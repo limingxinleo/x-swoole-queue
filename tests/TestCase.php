@@ -1,15 +1,14 @@
 <?php
-// +----------------------------------------------------------------------
-// | TestCase.php [ WE CAN DO IT JUST THINK IT ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2016-2017 limingxinleo All rights reserved.
-// +----------------------------------------------------------------------
-// | Author: limx <715557344@qq.com> <https://github.com/limingxinleo>
-// +----------------------------------------------------------------------
+/**
+ * This file is part of Queue Component with Swoole.
+ *
+ * @link     https://github.com/limingxinleo/x-swoole-queue
+ * @contact  limingxin@swoft.org
+ * @license  https://github.com/limingxinleo/x-swoole-queue/blob/master/LICENSE
+ */
 namespace Tests;
 
 use PHPUnit\Framework\TestCase as UnitTestCase;
-use Tests\Rpc\App\TestClient;
 use Xin\Redis;
 use Xin\Support\File;
 
