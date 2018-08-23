@@ -12,6 +12,8 @@ use Psr\Log\LoggerInterface;
 use Xin\Cli\Color;
 use Exception;
 use Redis;
+use Xin\Swoole\Queue\Packers\DefaultPacker;
+use Xin\Swoole\Queue\Packers\PackerInterface;
 
 class Job extends Task
 {
@@ -29,6 +31,8 @@ class Job extends Task
     protected $loggerHandler;
     // 当前redis 实例
     protected $redis;
+    // 打包器
+    protected $packer;
 
     public function setQueueKey($key)
     {
@@ -63,7 +67,8 @@ class Job extends Task
     protected function handle($recv)
     {
         try {
-            $obj = unserialize($recv);
+            $packer = $this->getPacker();
+            $obj = $packer->unpack($recv);
             if ($obj instanceof JobInterface) {
                 $name = get_class($obj);
                 $date = date('Y-m-d H:i:s');
@@ -142,10 +147,19 @@ class Job extends Task
         return $this->redis = $this->redisChildClient('job');
     }
 
+    public function getPacker()
+    {
+        if (isset($this->packer) && $this->packer instanceof PackerInterface) {
+            return $this->packer;
+        }
+        return $this->packer = new DefaultPacker();
+    }
+
     public function push(JobInterface $job)
     {
         $redis = $this->getRedisChildClient();
-        return $redis->lpush($this->queueKey, serialize($job));
+        $packer = $this->getPacker();
+        return $redis->lpush($this->queueKey, $packer->pack($job));
     }
 
     public function delay(JobInterface $job, $time = 0)
@@ -155,6 +169,7 @@ class Job extends Task
         }
 
         $redis = $this->getRedisChildClient();
-        return $redis->zAdd($this->delayKey, time() + $time, serialize($job));
+        $packer = $this->getPacker();
+        return $redis->zAdd($this->delayKey, time() + $time, $packer->pack($job));
     }
 }
