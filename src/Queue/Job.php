@@ -11,7 +11,6 @@ namespace Xin\Swoole\Queue;
 
 use Psr\Log\LoggerInterface;
 use Xin\Cli\Color;
-use Exception;
 use Redis;
 use Xin\Swoole\Queue\Packers\DefaultPacker;
 use Xin\Swoole\Queue\Packers\PackerInterface;
@@ -86,7 +85,7 @@ class Job extends Task
                 $date = date('Y-m-d H:i:s');
                 echo Color::colorize("[{$date}] Processed: {$name}", Color::FG_GREEN) . PHP_EOL;
             }
-        } catch (Exception $ex) {
+        } catch (\Throwable $ex) {
             $date = date('Y-m-d H:i:s');
             echo Color::colorize("[{$date}] Failed: {$name}", Color::FG_RED) . PHP_EOL;
             $this->logError($ex);
@@ -103,7 +102,7 @@ class Job extends Task
      * @param $message
      * @return \Phalcon\Logger\AdapterInterface
      */
-    protected function logError(Exception $ex)
+    protected function logError(\Throwable $ex)
     {
         if ($this->loggerHandler instanceof LoggerInterface) {
             $msg = $ex->getMessage() . ' code:' . $ex->getCode() . ' in ' . $ex->getFile() . ' line ' . $ex->getLine() . PHP_EOL . $ex->getTraceAsString();
